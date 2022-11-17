@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using WolfyBlog.API.Entities;
@@ -7,20 +8,20 @@ namespace WolfyBlog.API.Database
 {
     public class DataContext : IdentityDbContext<AppUser>
     {
-        public DataContext(DbContextOptions<DataContext> options) : base(options)
+        public DataContext(DbContextOptions options) : base(options)
         {
         }
 
-        DbSet<Article> Articles { get; set; }
-        DbSet<Category> Categories { get; set; }
-        DbSet<Comment> Comments { get; set; }
-        DbSet<Tag> Tags { get; set; }
-        DbSet<ArticleTag> ArticleTags { get; set; }
-        DbSet<AboutPage> AboutPage { get; set; }
-        DbSet<Project> Projects { get; set; }
-        DbSet<SiteLog> SiteLogs { get; set; }
-        DbSet<Album> Albums { get; set; }
-        DbSet<Photo> Photos { get; set; }
+        public DbSet<Article> Articles { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Tag> Tags { get; set; }
+        public DbSet<ArticleTag> ArticleTags { get; set; }
+        public DbSet<AboutPage> AboutPage { get; set; }
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<SiteLog> SiteLogs { get; set; }
+        public DbSet<Album> Albums { get; set; }
+        public DbSet<Photo> Photos { get; set; }
         
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -48,6 +49,21 @@ namespace WolfyBlog.API.Database
                 .HasOne(c => c.ReplyToComment)
                 .WithOne()
                 .HasForeignKey<Comment>(cm => cm.Id);
+
+            builder.Entity<IdentityRole>()
+                .HasData(
+                    new IdentityRole {
+                        Id = "ad9a06ac-e3bf-41cd-9949-c4d6865dc1e6",
+                        Name = "Admin",
+                        NormalizedName = "Admin".ToUpper()
+                    },
+                    new IdentityRole
+                    {
+                        Id = "61bc6695-86bd-42e3-88a4-1d77edf17de2",
+                        Name = "Guest",
+                        NormalizedName = "Guest".ToUpper()
+                    }
+                );
         }
     }
 }
