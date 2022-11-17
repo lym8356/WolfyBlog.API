@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using WolfyBlog.API.Database;
 using WolfyBlog.API.Entities;
+using WolfyBlog.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,7 @@ builder.Services.AddDbContext<DataContext>(options =>
 builder.Services.AddIdentityCore<AppUser>()
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<DataContext>();
+builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 
 var app = builder.Build();
 
