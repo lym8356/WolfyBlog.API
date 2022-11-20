@@ -188,7 +188,7 @@ namespace WolfyBlog.API.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AboutPage");
+                    b.ToTable("AboutPage", (string)null);
                 });
 
             modelBuilder.Entity("WolfyBlog.API.Entities.Album", b =>
@@ -219,7 +219,7 @@ namespace WolfyBlog.API.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Albums");
+                    b.ToTable("Albums", (string)null);
                 });
 
             modelBuilder.Entity("WolfyBlog.API.Entities.AppUser", b =>
@@ -327,7 +327,7 @@ namespace WolfyBlog.API.Database.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Articles");
+                    b.ToTable("Articles", (string)null);
                 });
 
             modelBuilder.Entity("WolfyBlog.API.Entities.ArticleTag", b =>
@@ -342,7 +342,7 @@ namespace WolfyBlog.API.Database.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("ArticleTags");
+                    b.ToTable("ArticleTags", (string)null);
                 });
 
             modelBuilder.Entity("WolfyBlog.API.Entities.Category", b =>
@@ -360,7 +360,7 @@ namespace WolfyBlog.API.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("WolfyBlog.API.Entities.Comment", b =>
@@ -393,7 +393,7 @@ namespace WolfyBlog.API.Database.Migrations
 
                     b.HasIndex("ReplyToArticleId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comments", (string)null);
                 });
 
             modelBuilder.Entity("WolfyBlog.API.Entities.Photo", b =>
@@ -412,7 +412,7 @@ namespace WolfyBlog.API.Database.Migrations
 
                     b.HasIndex("AlbumId");
 
-                    b.ToTable("Photos");
+                    b.ToTable("Photos", (string)null);
                 });
 
             modelBuilder.Entity("WolfyBlog.API.Entities.Project", b =>
@@ -443,7 +443,7 @@ namespace WolfyBlog.API.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Projects");
+                    b.ToTable("Projects", (string)null);
                 });
 
             modelBuilder.Entity("WolfyBlog.API.Entities.SiteLog", b =>
@@ -464,7 +464,7 @@ namespace WolfyBlog.API.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SiteLogs");
+                    b.ToTable("SiteLogs", (string)null);
                 });
 
             modelBuilder.Entity("WolfyBlog.API.Entities.Tag", b =>
@@ -482,7 +482,7 @@ namespace WolfyBlog.API.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tags");
+                    b.ToTable("Tags", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
