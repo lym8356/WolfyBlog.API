@@ -1,4 +1,6 @@
 ﻿using System;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WolfyBlog.API.DTOs;
@@ -39,6 +41,7 @@ namespace WolfyBlog.API.Controllers
             return Ok(articleFromRepo);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateArticle([FromBody] ArticleForCreationDTO articleForCreationDTO)
         {
@@ -48,6 +51,7 @@ namespace WolfyBlog.API.Controllers
             return BadRequest(new ProblemDetails { Title = "Problem creating article" });
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{articleId}")]
         public async Task<IActionResult> EditArticle(Guid articleId, ArticleForUpdateDTO articleForUpdateDTO)
         {
@@ -62,6 +66,7 @@ namespace WolfyBlog.API.Controllers
             return BadRequest(new ProblemDetails { Title = "Problem updating article" });
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{articleId}")]
         public async Task<IActionResult> DeleteArticle(Guid articleId)
         {

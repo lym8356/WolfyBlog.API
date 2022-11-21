@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WolfyBlog.API.Entities;
 using WolfyBlog.API.Services;
@@ -29,6 +31,7 @@ namespace WolfyBlog.API.Controllers
             return Ok(categoriesFromRepo);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateCategory(Category category)
         {
@@ -38,6 +41,7 @@ namespace WolfyBlog.API.Controllers
             return BadRequest(new ProblemDetails { Title = "Problem creating category" });
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{categoryId}")]
         public async Task<IActionResult> EditCategory(int categoryId, Category category)
         {
@@ -55,6 +59,7 @@ namespace WolfyBlog.API.Controllers
 
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{categoryId}")]
         public async Task<IActionResult> DeleteCategory(int categoryId)
         {

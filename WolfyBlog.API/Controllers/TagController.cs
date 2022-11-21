@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WolfyBlog.API.Entities;
 using WolfyBlog.API.Services;
@@ -26,6 +27,7 @@ namespace WolfyBlog.API.Controllers
             return Ok(tagsFromRepo);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateTag(Tag tag)
         {
@@ -35,6 +37,7 @@ namespace WolfyBlog.API.Controllers
             return BadRequest(new ProblemDetails { Title = "Problem creating tag" });
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{tagId}")]
         public async Task<IActionResult> EditTag(int tagId, Tag tag)
         {
@@ -52,6 +55,7 @@ namespace WolfyBlog.API.Controllers
 
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{tagId}")]
         public async Task<IActionResult> DeleteTag(int tagId)
         {

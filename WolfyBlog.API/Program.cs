@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using WolfyBlog.API.Database;
 using WolfyBlog.API.Entities;
 using WolfyBlog.API.Services;
@@ -18,13 +21,37 @@ builder.Services.AddDbContext<DataContext>(options =>
 });
 builder.Services.AddIdentityCore<AppUser>()
     .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<DataContext>();
+    .AddEntityFrameworkStores<DataContext>()
+    .AddSignInManager<SignInManager<AppUser>>();
+
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Add repo services to container
 builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 builder.Services.AddTransient<ITagRepository, TagRepository>();
 builder.Services.AddTransient<IArticleRepository, ArticleRepository>();
+
+// Add jwt token service
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(opt =>
+    {
+        opt.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = builder.Configuration["JWTSettings:Issuer"],
+
+            ValidateAudience = true,
+            ValidAudience = builder.Configuration["JWTSettings:Audience"],
+
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
+                .GetBytes(builder.Configuration["JWTSettings:TokenKey"]))
+        };
+    });
+builder.Services.AddAuthorization();
+builder.Services.AddScoped<TokenService>();
+
 
 var app = builder.Build();
 
