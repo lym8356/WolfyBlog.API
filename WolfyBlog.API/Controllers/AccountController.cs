@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WolfyBlog.API.DTOs;
@@ -48,6 +49,21 @@ namespace WolfyBlog.API.Controllers
                 };
             }
             return Unauthorized("Username or password is incorrect.");
+        }
+
+        [Authorize]
+        [HttpGet("currentUser")]
+        public async Task<ActionResult<UserDTO>> GetCurrentUser()
+        {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            return new UserDTO
+            {
+                DisplayName = user.DisplayName,
+                Username = user.UserName,
+                Bio = user.Bio,
+                Thumbnail = user.Thumbnail,
+                Token = await _tokenService.CreateToken(user)
+            };
         }
     }
 }
