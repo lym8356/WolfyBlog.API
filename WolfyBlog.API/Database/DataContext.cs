@@ -27,6 +27,12 @@ namespace WolfyBlog.API.Database
         {
             base.OnModelCreating(builder);
 
+            // configure category relationship: ondelete set null
+            builder.Entity<Category>()
+                .HasMany(c => c.Articles)
+                .WithOne(a => a.Category)
+                .OnDelete(DeleteBehavior.SetNull);
+
             // configure many to many relationship for article and tag
             builder.Entity<ArticleTag>(x => x.HasKey(at => new { at.ArticleId, at.TagId }));
             builder.Entity<ArticleTag>()

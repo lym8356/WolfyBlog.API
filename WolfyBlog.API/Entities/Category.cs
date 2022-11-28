@@ -12,5 +12,6 @@ namespace WolfyBlog.API.Entities
         [Required]
         [MaxLength(100)]
         public string Title { get; set; }
+        public ICollection<Article> Articles { get; set; }
     }
 }
