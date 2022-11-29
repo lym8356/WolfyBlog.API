@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using WolfyBlog.API.Database;
 using WolfyBlog.API.Entities;
 using AutoMapper.QueryableExtensions;
@@ -85,10 +84,10 @@ namespace WolfyBlog.API.Services
                 .FirstOrDefaultAsync(a => a.Id == articleId);
         }
 
-        public async Task<IEnumerable<ArticleDTO>> GetArticlesAsync()
+        public async Task<IEnumerable<Article>> GetArticlesAsync()
         {
             return await _context.Articles
-                .ProjectTo<ArticleDTO>(_mapper.ConfigurationProvider)
+                .ProjectTo<Article>(_mapper.ConfigurationProvider)
                 .ToListAsync();
         }
 

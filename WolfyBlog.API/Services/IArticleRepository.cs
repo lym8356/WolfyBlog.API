@@ -7,7 +7,7 @@ namespace WolfyBlog.API.Services
 {
     public interface IArticleRepository
     {
-        Task<IEnumerable<ArticleDTO>> GetArticlesAsync();
+        Task<IEnumerable<Article>> GetArticlesAsync();
         Task<Article> GetArticleAsync(Guid articleId);
         Task<IEnumerable<Article>> GetArticlesByCategoryAsync();
         Task<IEnumerable<Article>> GetArticlesByTagsAsync();
