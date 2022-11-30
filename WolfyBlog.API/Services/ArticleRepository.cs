@@ -77,26 +77,31 @@ namespace WolfyBlog.API.Services
             _context.Update(articleFromRepo);
         }
 
-        public async Task<Article> GetArticleAsync(Guid articleId)
+        public async Task<ArticleDTO> GetArticleAsync(Guid articleId)
         {
             return await _context.Articles
-                .ProjectTo<Article>(_mapper.ConfigurationProvider)
+                .ProjectTo<ArticleDTO>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(a => a.Id == articleId);
         }
 
-        public async Task<IEnumerable<Article>> GetArticlesAsync()
+        public async Task<Article> FindArticleByIdAsync(Guid articleId)
+        {
+            return await _context.Articles.FindAsync(articleId);
+        }
+
+        public async Task<IEnumerable<ArticleDTO>> GetArticlesAsync()
         {
             return await _context.Articles
-                .ProjectTo<Article>(_mapper.ConfigurationProvider)
+                .ProjectTo<ArticleDTO>(_mapper.ConfigurationProvider)
                 .ToListAsync();
         }
 
-        public Task<IEnumerable<Article>> GetArticlesByCategoryAsync()
+        public Task<IEnumerable<ArticleDTO>> GetArticlesByCategoryAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Article>> GetArticlesByTagsAsync()
+        public Task<IEnumerable<ArticleDTO>> GetArticlesByTagsAsync()
         {
             throw new NotImplementedException();
         }

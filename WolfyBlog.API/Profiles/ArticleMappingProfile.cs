@@ -10,8 +10,8 @@ namespace WolfyBlog.API.Profiles
         {
             CreateMap<Article, Article>();
             CreateMap<Article, ArticleDTO>();
-            CreateMap<ArticleTag, Tag>()
-                .ForMember(d => d.Title, o => o.MapFrom(s => s.Tag.Title));
+            //CreateMap<ArticleTag, Tag>()
+            //    .ForMember(d => d.Title, o => o.MapFrom(s => s.Tag.Title));
             CreateMap<ArticleForCreationDTO, Article>();
         }
     }

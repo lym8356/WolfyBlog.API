@@ -55,7 +55,7 @@ namespace WolfyBlog.API.Controllers
         [HttpPut("{articleId}")]
         public async Task<IActionResult> EditArticle(Guid articleId, ArticleForUpdateDTO articleForUpdateDTO)
         {
-            var articleToEdit = await _articleRepository.GetArticleAsync(articleId);
+            var articleToEdit = await _articleRepository.FindArticleByIdAsync(articleId);
             if (articleToEdit == null)
             {
                 return NotFound($"Article with ID {articleId} does not exist.");
@@ -75,7 +75,7 @@ namespace WolfyBlog.API.Controllers
                 return NotFound("Article does not exist.");
             }
 
-            var articleFromRepo = await _articleRepository.GetArticleAsync(articleId);
+            var articleFromRepo = await _articleRepository.FindArticleByIdAsync(articleId);
             _articleRepository.DeleteArticleAsync(articleFromRepo);
             var result = await _articleRepository.SaveAsync();
             if (result) return Ok();

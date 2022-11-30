@@ -33,7 +33,7 @@ namespace WolfyBlog.API.Controllers
         {
             _tagRepository.CreateTagAsync(tag);
             var result = await _tagRepository.SaveAsync();
-            if (result) return Ok();
+            if (result) return Ok(tag);
             return BadRequest(new ProblemDetails { Title = "Problem creating tag" });
         }
 

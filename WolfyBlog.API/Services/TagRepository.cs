@@ -1,16 +1,21 @@
 ﻿using System;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using WolfyBlog.API.Database;
+using WolfyBlog.API.DTOs;
 using WolfyBlog.API.Entities;
+using AutoMapper.QueryableExtensions;
 
 namespace WolfyBlog.API.Services
 {
     public class TagRepository : ITagRepository
     {
         private readonly DataContext _context;
-        public TagRepository(DataContext context)
+        private readonly IMapper _mapper;
+        public TagRepository(DataContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public void CreateTagAsync(Tag tag)
@@ -31,9 +36,12 @@ namespace WolfyBlog.API.Services
             return await _context.Tags.FindAsync(tagId);
         }
 
-        public async Task<IEnumerable<Tag>> GetTagsAsync()
+        public async Task<IEnumerable<TagDTO>> GetTagsAsync()
         {
-            return await _context.Tags.ToListAsync();
+            return await _context.Tags
+                .ProjectTo<TagDTO>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
         }
 
         public async Task<bool> SaveAsync()

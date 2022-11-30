@@ -32,7 +32,7 @@ namespace WolfyBlog.API.Controllers
         {
             _categoryRepository.CreateCategoryAsync(category);
             var result = await _categoryRepository.SaveAsync();
-            if (result) return Ok();
+            if (result) return Ok(category);
             return BadRequest(new ProblemDetails { Title = "Problem creating category" });
         }
 

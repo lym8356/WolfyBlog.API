@@ -1,8 +1,7 @@
-﻿using WolfyBlog.API.Entities;
-
+﻿using System;
 namespace WolfyBlog.API.DTOs
 {
-	public class CategoryDTO
+	public class TagDTO
 	{
         public int Id { get; set; }
         public string Title { get; set; }
