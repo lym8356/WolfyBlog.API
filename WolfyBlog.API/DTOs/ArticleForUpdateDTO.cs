@@ -3,9 +3,7 @@ namespace WolfyBlog.API.DTOs
 {
     public class ArticleForUpdateDTO : ArticleForCreationDTO
     {
-        public ArticleForUpdateDTO()
-        {
-        }
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     }
 }
 
