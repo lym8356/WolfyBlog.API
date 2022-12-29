@@ -22,7 +22,7 @@ namespace WolfyBlog.API.Services
             return await _context.Articles.AnyAsync(a => a.Id == articleId);
         }
 
-        public async Task CreateArticleAsync(ArticleForCreationDTO articleForCreationDTO)
+        public async Task<ArticleDTO> CreateArticleAsync(ArticleForCreationDTO articleForCreationDTO)
         {
             var articleToSave = _mapper.Map<Article>(articleForCreationDTO);
             var category = await _context.Categories.FindAsync(articleForCreationDTO.CategoryId);
@@ -41,21 +41,24 @@ namespace WolfyBlog.API.Services
                 }
             }
             _context.Articles.Add(articleToSave);
+            // map to articleDTO to avoid object cycle
+            var articleToReturn = _mapper.Map<ArticleDTO>(articleToSave);
+            return articleToReturn;
         }
 
-        public void DeleteArticleAsync(Article article)
+        public void DeleteArticle(Article article)
         {
             _context.Articles.Remove(article);
         }
 
-        public async Task EditArticleAsync(Article articleFromRepo, ArticleForUpdateDTO articleForUpdateDTO)
+        public async Task<ArticleDTO> EditArticleAsync(Article articleFromRepo, ArticleForUpdateDTO articleForUpdateDTO)
         {
             _mapper.Map(articleForUpdateDTO, articleFromRepo);
             // clear old category and tags
             articleFromRepo.Category = null;
             articleFromRepo.ArticleTags.Clear();
 
-            // clear join table
+            // clear join table data
             var articleTagsToRemove = _context.ArticleTags.Where(a => a.ArticleId == articleFromRepo.Id);
             _context.RemoveRange(articleTagsToRemove);
 
@@ -75,6 +78,8 @@ namespace WolfyBlog.API.Services
                 }
             }
             _context.Update(articleFromRepo);
+            var articleToReturn = _mapper.Map<ArticleDTO>(articleFromRepo);
+            return articleToReturn;
         }
 
         public async Task<ArticleDTO> GetArticleAsync(Guid articleId)

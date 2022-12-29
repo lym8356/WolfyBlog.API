@@ -17,6 +17,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.11" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.11" />
+    <PackageReference Include="CloudinaryDotNet" Version="1.20.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,6 +32,8 @@
     <None Remove="AutoMapper.Extensions.Microsoft.DependencyInjection" />
     <None Remove="Profiles\" />
     <None Remove="Microsoft.AspNetCore.Authentication.JwtBearer" />
+    <None Remove="CloudinaryDotNet" />
+    <None Remove="Services\Article\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Entities\" />
@@ -38,5 +41,6 @@
     <Folder Include="Services\" />
     <Folder Include="DTOs\" />
     <Folder Include="Profiles\" />
+    <Folder Include="Services\Interfaces\" />
   </ItemGroup>
 </Project>

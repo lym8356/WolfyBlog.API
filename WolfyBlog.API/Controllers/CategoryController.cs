@@ -30,7 +30,7 @@ namespace WolfyBlog.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCategory(Category category)
         {
-            _categoryRepository.CreateCategoryAsync(category);
+            _categoryRepository.CreateCategory(category);
             var result = await _categoryRepository.SaveAsync();
             if (result) return Ok(category);
             return BadRequest(new ProblemDetails { Title = "Problem creating category" });
@@ -64,7 +64,7 @@ namespace WolfyBlog.API.Controllers
             }
 
             var categoryFromRepo = await _categoryRepository.GetCategoryAsync(categoryId);
-            _categoryRepository.DeleteCategoryAsync(categoryFromRepo);
+            _categoryRepository.DeleteCategory(categoryFromRepo);
             var result = await _categoryRepository.SaveAsync();
             if (result) return Ok();
             return BadRequest(new ProblemDetails { Title = "Problem deleting category" });

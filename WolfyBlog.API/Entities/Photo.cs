@@ -6,7 +6,9 @@ namespace WolfyBlog.API.Entities
     public class Photo
     {
         [Key]
-        public string Id { get; set; }
+        public Guid Id { get; set; }
+        [Required]
+        public string publicId { get; set; }
         [Required]
         public string Url { get; set; }
     }

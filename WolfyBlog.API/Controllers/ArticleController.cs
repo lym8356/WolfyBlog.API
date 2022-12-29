@@ -24,12 +24,12 @@ namespace WolfyBlog.API.Controllers
             var articlesFromRepo = await _articleRepository.GetArticlesAsync();
             if (articlesFromRepo == null || articlesFromRepo.Count() <= 0)
             {
-                return NotFound("No categories found.");
+                return NotFound("No articles found.");
             }
             return Ok(articlesFromRepo);
         }
 
-        [HttpGet("{articleId}")]
+        [HttpGet("{articleId}", Name = "GetArticle")]
         public async Task<IActionResult> GetArticle(Guid articleId)
         {
             if (!(await _articleRepository.ArticleExistsAsync(articleId)))
@@ -45,9 +45,10 @@ namespace WolfyBlog.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateArticle([FromBody] ArticleForCreationDTO articleForCreationDTO)
         {
-            await _articleRepository.CreateArticleAsync(articleForCreationDTO);
+            var articleToReturn = await _articleRepository.CreateArticleAsync(articleForCreationDTO);
             var result = await _articleRepository.SaveAsync();
-            if (result) return Ok();
+            //if (result) return Ok();
+            if (result) return CreatedAtRoute("GetArticle", new { ArticleId = articleToReturn.Id }, articleToReturn);
             return BadRequest(new ProblemDetails { Title = "Problem creating article" });
         }
 
@@ -60,9 +61,14 @@ namespace WolfyBlog.API.Controllers
             {
                 return NotFound($"Article with ID {articleId} does not exist.");
             }
-            await _articleRepository.EditArticleAsync(articleToEdit, articleForUpdateDTO);
+            var temp = await _articleRepository.EditArticleAsync(articleToEdit, articleForUpdateDTO);
             var result = await _articleRepository.SaveAsync();
-            if (result) return Ok();
+            if (result)
+            {
+                // cannot send back temp because it creates empty tags ? need to be fixed
+                var articleToReturn = await _articleRepository.GetArticleAsync(temp.Id);
+                return Ok(articleToReturn);
+            }
             return BadRequest(new ProblemDetails { Title = "Problem updating article" });
         }
 
@@ -76,7 +82,7 @@ namespace WolfyBlog.API.Controllers
             }
 
             var articleFromRepo = await _articleRepository.FindArticleByIdAsync(articleId);
-            _articleRepository.DeleteArticleAsync(articleFromRepo);
+            _articleRepository.DeleteArticle(articleFromRepo);
             var result = await _articleRepository.SaveAsync();
             if (result) return Ok();
             return BadRequest(new ProblemDetails { Title = "Problem deleting article" });

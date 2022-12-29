@@ -23,14 +23,14 @@ namespace WolfyBlog.API.Services
             return await _context.Categories.AnyAsync(c => c.Id == categoryId);
         }
 
-        public void CreateCategoryAsync(Category category)
+        public void CreateCategory(Category category)
         {
             if (category == null) throw new ArgumentNullException(nameof(category));
 
             _context.Categories.Add(category);
         }
 
-        public void DeleteCategoryAsync(Category category)
+        public void DeleteCategory(Category category)
         {
             if (category == null) throw new ArgumentNullException(nameof(category));
             _context.Categories.Remove(category);

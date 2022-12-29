@@ -16,7 +16,7 @@ namespace WolfyBlog.API.Entities
         public string Description { get; set; }
         [Required]
         public string Path { get; set; }
-        public string Cover { get; set; }
+        public string Cover { get; set; } = "";
         public ICollection<Photo> AlbumPhotos { get; set; } = new List<Photo>();
     }
 }
