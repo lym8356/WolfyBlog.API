@@ -265,7 +265,7 @@ namespace WolfyBlog.API.Controllers
 
             if (result)
             {
-                return Ok();
+                return Ok(album);
             }
             return BadRequest(new ProblemDetails { Title = "Problem deleting image" });
         }

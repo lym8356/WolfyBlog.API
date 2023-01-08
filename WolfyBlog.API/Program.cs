@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using WolfyBlog.API.Database;
 using WolfyBlog.API.Entities;
 using WolfyBlog.API.Services;
+using WolfyBlog.API.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +32,7 @@ builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 builder.Services.AddTransient<ITagRepository, TagRepository>();
 builder.Services.AddTransient<IArticleRepository, ArticleRepository>();
 builder.Services.AddTransient<IAlbumRepository, AlbumRepository>();
+builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
 
 // Add jwt token service
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
