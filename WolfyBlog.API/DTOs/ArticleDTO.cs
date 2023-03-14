@@ -12,6 +12,7 @@ namespace WolfyBlog.API.DTOs
         public DateTime UpdatedAt { get; set; }
         public CategoryDTO Category { get; set; }
         public ICollection<TagDTO> ArticleTags { get; set; }
+        public ICollection<Comment> Comments { get; set; }
         public bool IsDraft { get; set; }
     }
 }

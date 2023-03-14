@@ -16,7 +16,7 @@ namespace WolfyBlog.API.Entities
         [MaxLength(1500)]
         public string Description { get; set; }
         public string Link { get; set; }
-        public string Cover { get; set; }
+        public string Cover { get; set; } = "";
     }
 }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace WolfyBlog.API.Entities
 {
@@ -18,8 +19,13 @@ namespace WolfyBlog.API.Entities
         [Required]
         [EmailAddress]
         public string CommenterEmail { get; set; }
-        public Comment? ReplyToComment { get; set; }
+        public Guid? ParentCommentId { get; set; }
+        [JsonIgnore]
+        public Comment? ParentComment { get; set; }
+        public Guid? ReplyToArticleId { get; set; }
+        [JsonIgnore]
         public Article? ReplyToArticle { get; set; }
+        public ICollection<Comment> Replies { get; set; } = new List<Comment>();
     }
 }
 

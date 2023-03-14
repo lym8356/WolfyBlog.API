@@ -33,6 +33,8 @@ builder.Services.AddTransient<ITagRepository, TagRepository>();
 builder.Services.AddTransient<IArticleRepository, ArticleRepository>();
 builder.Services.AddTransient<IAlbumRepository, AlbumRepository>();
 builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
+builder.Services.AddTransient<ISiteLogRepository, SiteLogRepository>();
+builder.Services.AddTransient<ICommentRepository, CommentRepository>();
 
 // Add jwt token service
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

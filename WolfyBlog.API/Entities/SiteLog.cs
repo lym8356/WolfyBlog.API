@@ -13,7 +13,7 @@ namespace WolfyBlog.API.Entities
         [MaxLength(1500)]
         public string Description { get; set; }
         [Required]
-        public DateTime DatedAdded { get; set; }
+        public DateTime DateAdded { get; set; } = DateTime.Now.Date;
     }
 }
 

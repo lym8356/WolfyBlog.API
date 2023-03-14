@@ -44,7 +44,7 @@ namespace WolfyBlog.API.Database
                 .HasOne(t => t.Tag)
                 .WithMany(at => at.ArticleTags)
                 .HasForeignKey(tt => tt.TagId);
-
+                
             // delete all comments associated with one article
             builder.Entity<Comment>()
                 .HasOne(a => a.ReplyToArticle)
@@ -52,9 +52,10 @@ namespace WolfyBlog.API.Database
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<Comment>()
-                .HasOne(c => c.ReplyToComment)
-                .WithOne()
-                .HasForeignKey<Comment>(cm => cm.Id);
+                .HasOne(c => c.ParentComment)
+                .WithMany(c => c.Replies)
+                .HasForeignKey(c => c.ParentCommentId);
+                //.OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<IdentityRole>()
                 .HasData(

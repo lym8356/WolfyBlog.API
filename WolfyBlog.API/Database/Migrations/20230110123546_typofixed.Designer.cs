@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WolfyBlog.API.Database;
 
@@ -11,9 +12,11 @@ using WolfyBlog.API.Database;
 namespace WolfyBlog.API.Database.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230110123546_typofixed")]
+    partial class typofixed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,14 +55,14 @@ namespace WolfyBlog.API.Database.Migrations
                         new
                         {
                             Id = "ad9a06ac-e3bf-41cd-9949-c4d6865dc1e6",
-                            ConcurrencyStamp = "9b3ecbcd-ae21-486d-86d0-05419b78bbc4",
+                            ConcurrencyStamp = "3ccc3797-bf86-43fc-81e1-6c190a6358af",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = "61bc6695-86bd-42e3-88a4-1d77edf17de2",
-                            ConcurrencyStamp = "17c35940-abdf-4d7a-95d7-7385e0379b22",
+                            ConcurrencyStamp = "71536590-0961-4f1f-9fb7-ded96a17324a",
                             Name = "Guest",
                             NormalizedName = "GUEST"
                         });
@@ -388,15 +391,10 @@ namespace WolfyBlog.API.Database.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("ParentCommentId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid?>("ReplyToArticleId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ParentCommentId");
 
                     b.HasIndex("ReplyToArticleId");
 
@@ -579,18 +577,20 @@ namespace WolfyBlog.API.Database.Migrations
 
             modelBuilder.Entity("WolfyBlog.API.Entities.Comment", b =>
                 {
-                    b.HasOne("WolfyBlog.API.Entities.Comment", "ParentComment")
-                        .WithMany("Replies")
-                        .HasForeignKey("ParentCommentId");
+                    b.HasOne("WolfyBlog.API.Entities.Comment", "ReplyToComment")
+                        .WithOne()
+                        .HasForeignKey("WolfyBlog.API.Entities.Comment", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WolfyBlog.API.Entities.Article", "ReplyToArticle")
                         .WithMany("Comments")
                         .HasForeignKey("ReplyToArticleId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.Navigation("ParentComment");
-
                     b.Navigation("ReplyToArticle");
+
+                    b.Navigation("ReplyToComment");
                 });
 
             modelBuilder.Entity("WolfyBlog.API.Entities.Photo", b =>
@@ -615,11 +615,6 @@ namespace WolfyBlog.API.Database.Migrations
             modelBuilder.Entity("WolfyBlog.API.Entities.Category", b =>
                 {
                     b.Navigation("Articles");
-                });
-
-            modelBuilder.Entity("WolfyBlog.API.Entities.Comment", b =>
-                {
-                    b.Navigation("Replies");
                 });
 
             modelBuilder.Entity("WolfyBlog.API.Entities.Tag", b =>

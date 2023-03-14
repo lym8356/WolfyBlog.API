@@ -12,6 +12,7 @@ namespace WolfyBlog.API.Controllers
     public class ProjectController : ControllerBase
 	{
 		private IProjectRepository _projectRepository;
+
         public ProjectController(IProjectRepository projectRepository)
         {
             _projectRepository = projectRepository;
