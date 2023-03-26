@@ -59,12 +59,24 @@ namespace WolfyBlog.API.Controllers
                     // then save the comment to db
                     comment.ReplyToArticle = articleFromRepo;
                     articleFromRepo.Comments.Add(comment);
+                    if (comment.ParentCommentId.HasValue)
+                    {
+                        // this is a reply to a article comment
+                        var commentFromRepo = await _commentRepository
+                            .FindCommentById(commentForCreationDTO.ParentCommentId ?? Guid.Empty);
+                        if (commentFromRepo != null)
+                        {
+                            comment.ParentComment = commentFromRepo;
+                            commentFromRepo.Replies.Add(comment);
+                        }
+
+                    }
                     _commentRepository.CreateComment(comment);
                 } else
                 {
                     return BadRequest(new ProblemDetails { Title = "Article does not exist" });
                 }
-            } else if (commentForCreationDTO.ParentCommentId.HasValue)
+            } else if (commentForCreationDTO.ParentCommentId.HasValue && commentForCreationDTO.ReplyToArticleId == null)
             {
                 var commentFromRepo = await _commentRepository
                     .FindCommentById(commentForCreationDTO.ParentCommentId ?? Guid.Empty);

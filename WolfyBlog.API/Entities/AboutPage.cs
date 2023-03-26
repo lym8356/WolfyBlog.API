@@ -12,6 +12,7 @@ namespace WolfyBlog.API.Entities
         [Required]
         [MaxLength]
         public string Content { get; set; }
+        [Required]
         public bool IsAboutSite { get; set; }
     }
 }
