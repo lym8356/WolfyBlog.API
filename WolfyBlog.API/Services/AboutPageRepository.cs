@@ -25,6 +25,11 @@ namespace WolfyBlog.API.Services
             return await _context.AboutPage.AnyAsync(a => a.Id == aboutPageId);
         }
 
+        public async Task<bool> NotificationExistAsync()
+        {
+            return await _context.AboutPage.AnyAsync(a => a.IsNotification == true);
+        }
+
        
         public AboutPage CreateAboutPage(AboutPage aboutPage)
         {
@@ -45,15 +50,21 @@ namespace WolfyBlog.API.Services
             return await _context.AboutPage.FirstOrDefaultAsync(a => a.Id == aboutPageId);  
         }
 
-        
+        public async Task<AboutPage> GetNotificationAsync()
+        {
+            return await _context.AboutPage.FirstOrDefaultAsync(a => a.IsNotification == true);
+        }
+
         public async Task<bool> SaveAsync()
         {
             return (await _context.SaveChangesAsync() > 0);
         }
 
-        public async Task<IEnumerable<AboutPage>> CheckDuplicate(bool isAboutSite)
+        public async Task<IEnumerable<AboutPage>> CheckDuplicate(bool isAboutSite, bool isNotification)
         {
-            return await _context.AboutPage.Where(a => a.IsAboutSite == isAboutSite).ToListAsync();
+            return await _context.AboutPage.Where(a => a.IsAboutSite == isAboutSite)
+                .Where(a => a.IsNotification == isNotification)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<AboutPage>> GetAboutPagesAsync()

@@ -14,6 +14,8 @@ namespace WolfyBlog.API.Entities
         public string Content { get; set; }
         [Required]
         public bool IsAboutSite { get; set; }
+        [Required]
+        public bool IsNotification { get; set; }
     }
 }
 

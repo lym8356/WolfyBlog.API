@@ -8,10 +8,12 @@ namespace WolfyBlog.API.Services.Interfaces
 	{
         Task<AboutPage> GetAboutPageAsync(int aboutPageId);
         Task<IEnumerable<AboutPage>> GetAboutPagesAsync();
-        Task<IEnumerable<AboutPage>> CheckDuplicate(bool isAboutSite);
+        Task<AboutPage> GetNotificationAsync();
+        Task<IEnumerable<AboutPage>> CheckDuplicate(bool isAboutSite, bool isNotification);
         AboutPage CreateAboutPage(AboutPage aboutPage);
         //AboutPage EditAboutPage(AboutPage aboutFromRepo, AboutPage aboutUpdated);
         Task<bool> AboutPageExistAsync(int aboutPageId);
+        Task<bool> NotificationExistAsync();
         Task<bool> SaveAsync();
     }
 }

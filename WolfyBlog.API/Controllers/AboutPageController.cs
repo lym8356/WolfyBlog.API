@@ -29,22 +29,24 @@ namespace WolfyBlog.API.Controllers
             return Ok(aboutPagesFromRepo);
         }
 
-        [HttpGet("{aboutPageId}", Name = "GetAboutPage")]
-        public async Task<IActionResult> GetAboutPage(int aboutPageId)
+        [HttpGet("getnotification")]
+        public async Task<IActionResult> GetNotification()
         {
-            if (!(await _aboutPageRepository.AboutPageExistAsync(aboutPageId)))
+            if (!(await _aboutPageRepository.NotificationExistAsync()))
             {
-                return NotFound("About page content does not exist.");
+                return NotFound("Notification does not exist.");
             }
-            var aboutPageFromRepo = await _aboutPageRepository.GetAboutPageAsync(aboutPageId);
-            return Ok(aboutPageFromRepo);
+            var notificationFromRepo = await _aboutPageRepository.GetNotificationAsync();
+            return Ok(notificationFromRepo);
         }
+
+        [HttpGet("{aboutPageId}", Name = "GetAboutPage")]
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateAboutPage([FromBody] AboutPage aboutPage)
         {
-            var count = await _aboutPageRepository.CheckDuplicate(aboutPage.IsAboutSite);
+            var count = await _aboutPageRepository.CheckDuplicate(aboutPage.IsAboutSite, aboutPage.IsNotification);
             
             // check for duplicate about page
             if (count.Count() > 0)
