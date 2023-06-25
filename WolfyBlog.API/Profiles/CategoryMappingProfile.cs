@@ -8,7 +8,8 @@ namespace WolfyBlog.API.Profiles
 	{
 		public CategoryMappingProfile()
 		{
-            CreateMap<Category, CategoryDTO>();
+            CreateMap<Category, CategoryDTO>()
+				.ForMember(dest => dest.ArticleCount, opt => opt.MapFrom(src => src.Articles.Count));
         }
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using WolfyBlog.API.Database;
@@ -26,6 +27,9 @@ builder.Services.AddIdentityCore<AppUser>()
     .AddSignInManager<SignInManager<AppUser>>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+// header services
+builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
 // Add repo services to container
 builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
@@ -73,7 +77,7 @@ app.UseHttpsRedirection();
 
 app.UseCors(opt =>
 {
-    opt.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
+    opt.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000", "http://127.0.0.1:5173");
 });
 
 app.UseAuthentication();

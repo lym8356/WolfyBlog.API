@@ -18,6 +18,17 @@ namespace WolfyBlog.API.Controllers
             _aboutPageRepository = aboutPageRepository;
 		}
 
+        [HttpGet]
+        public async Task<IActionResult> GetAboutPages()
+        {
+            var aboutPagesFromRepo = await _aboutPageRepository.GetAboutPagesAsync();
+            if (aboutPagesFromRepo == null || aboutPagesFromRepo.Count() <= 0)
+            {
+                return NotFound("No about pages found.");
+            }
+            return Ok(aboutPagesFromRepo);
+        }
+
         [HttpGet("{aboutPageId}", Name = "GetAboutPage")]
         public async Task<IActionResult> GetAboutPage(int aboutPageId)
         {

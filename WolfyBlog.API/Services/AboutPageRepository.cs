@@ -55,6 +55,11 @@ namespace WolfyBlog.API.Services
         {
             return await _context.AboutPage.Where(a => a.IsAboutSite == isAboutSite).ToListAsync();
         }
+
+        public async Task<IEnumerable<AboutPage>> GetAboutPagesAsync()
+        {
+            return await _context.AboutPage.ToListAsync();
+        }
     }
 }
 

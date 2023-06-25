@@ -34,6 +34,8 @@
     <None Remove="Microsoft.AspNetCore.Authentication.JwtBearer" />
     <None Remove="CloudinaryDotNet" />
     <None Remove="Services\Article\" />
+    <None Remove="ResourceParameters\" />
+    <None Remove="Helper\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Entities\" />
@@ -42,5 +44,7 @@
     <Folder Include="DTOs\" />
     <Folder Include="Profiles\" />
     <Folder Include="Services\Interfaces\" />
+    <Folder Include="ResourceParameters\" />
+    <Folder Include="Helper\" />
   </ItemGroup>
 </Project>

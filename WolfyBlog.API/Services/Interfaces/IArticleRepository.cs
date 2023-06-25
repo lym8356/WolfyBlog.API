@@ -1,16 +1,21 @@
-﻿using System;
-using WolfyBlog.API.DTOs;
+﻿using WolfyBlog.API.DTOs;
 using WolfyBlog.API.Entities;
+using WolfyBlog.API.Helper;
 
 namespace WolfyBlog.API.Services
 {
     public interface IArticleRepository
     {
-        Task<IEnumerable<ArticleDTO>> GetArticlesAsync();
+        Task<PaginationList<ArticleDTO>> GetArticlesAsync(
+            string keyword, int? pageSize, int? pageNumber);
         Task<ArticleDTO> GetArticleAsync(Guid articleId);
         Task<Article> FindArticleByIdAsync(Guid articleId);
-        Task<IEnumerable<ArticleDTO>> GetArticlesByCategoryAsync();
-        Task<IEnumerable<ArticleDTO>> GetArticlesByTagsAsync();
+        Task<PaginationList<ArticleDTO>> GetArticlesByCategoryAsync(
+            string categoryName,
+            int? pageSize, int? pageNumber);
+        Task<PaginationList<ArticleDTO>> GetArticlesByTagsAsync(
+            IEnumerable<string> tagNames,
+            int? pageSize, int? pageNumber);
         Task<ArticleDTO> CreateArticleAsync(ArticleForCreationDTO articleForCreationDTO);
         Task<ArticleDTO> EditArticleAsync(Article articleFromRepo, ArticleForUpdateDTO articleForUpdateDTO);
         void DeleteArticle(Article article);

@@ -4,6 +4,7 @@ using WolfyBlog.API.Entities;
 using AutoMapper.QueryableExtensions;
 using WolfyBlog.API.DTOs;
 using AutoMapper;
+using WolfyBlog.API.Helper;
 
 namespace WolfyBlog.API.Services
 {
@@ -94,21 +95,95 @@ namespace WolfyBlog.API.Services
             return await _context.Articles.FindAsync(articleId);
         }
 
-        public async Task<IEnumerable<ArticleDTO>> GetArticlesAsync()
+        public async Task<PaginationList<ArticleDTO>> GetArticlesAsync(
+            string keyword,
+            int? pageSize,
+            int? pageNumber)
         {
-            return await _context.Articles
-                .ProjectTo<ArticleDTO>(_mapper.ConfigurationProvider)
-                .ToListAsync();
+            IQueryable<ArticleDTO> result = _context.Articles.ProjectTo<ArticleDTO>(_mapper.ConfigurationProvider)
+                .OrderByDescending(a => a.CreatedAt);
+                
+            if(!string.IsNullOrWhiteSpace(keyword))
+            {
+                keyword = keyword.Trim();
+                result = result.Where(a => a.Title.Contains(keyword));
+            }
+
+            if (pageSize.HasValue && pageNumber.HasValue)
+            {
+                return await PaginationList<ArticleDTO>.CreateAsync(pageNumber.Value, pageSize.Value, result);
+            } else
+            {
+                var totalCount = await result.CountAsync();
+                var items = await result.ToListAsync();
+
+                return new PaginationList<ArticleDTO>(totalCount, 1, totalCount, items);
+            }
+
+
+            //return await result.ToListAsync();
+            //return await _context.Articles
+            //    .ProjectTo<Article>(_mapper.ConfigurationProvider)
+            //    .ToListAsync();
         }
 
-        public Task<IEnumerable<ArticleDTO>> GetArticlesByCategoryAsync()
+        public async Task<PaginationList<ArticleDTO>> GetArticlesByCategoryAsync(string categoryName,
+            int? pageSize,
+            int? pageNumber)
         {
-            throw new NotImplementedException();
+            var result = _context.Articles.AsQueryable().ProjectTo<ArticleDTO>(_mapper.ConfigurationProvider);
+
+            if (!string.IsNullOrEmpty(categoryName))
+            {
+                result = result.Where(a => a.Category.Title == categoryName);
+            }
+
+            if (pageSize.HasValue && pageNumber.HasValue)
+            {
+                return await PaginationList<ArticleDTO>.CreateAsync(pageNumber.Value, pageSize.Value, result);
+            }
+            else
+            {
+                var totalCount = await result.CountAsync();
+                var items = await result.ToListAsync();
+
+                return new PaginationList<ArticleDTO>(totalCount, 1, totalCount, items);
+            }
+
         }
 
-        public Task<IEnumerable<ArticleDTO>> GetArticlesByTagsAsync()
+        public async Task<PaginationList<ArticleDTO>> GetArticlesByTagsAsync(
+            IEnumerable<string> tagNames,
+            int? pageSize, int? pageNumber)
         {
-            throw new NotImplementedException();
+            var articles = _context.Articles.AsQueryable();
+            if (tagNames != null && tagNames.Any())
+            {
+                foreach (var tagName in tagNames)
+                {
+                    var currentTagName = tagName; // to avoid access to modified closure
+                    articles = articles.Where(a => a.ArticleTags.Any(at => at.Tag.Title == currentTagName));
+                }
+            }
+
+            var result = articles.ProjectTo<ArticleDTO>(_mapper.ConfigurationProvider);
+
+            if (pageSize.HasValue && pageNumber.HasValue)
+            {
+                return await PaginationList<ArticleDTO>.CreateAsync(pageNumber.Value, pageSize.Value, result);
+            }
+            else
+            {
+                var totalCount = await result.CountAsync();
+                var items = await result.ToListAsync();
+
+                return new PaginationList<ArticleDTO>(totalCount, 1, totalCount, items);
+            }
+
+            //return await _context.Articles
+            //    .Where(a => tagNames.All(tag => a.ArticleTags.Any(t => t.Tag.Title == tag)))
+            //    .ProjectTo<ArticleDTO>(_mapper.ConfigurationProvider)
+            //    .ToListAsync();
         }
 
         public async Task<bool> SaveAsync()
