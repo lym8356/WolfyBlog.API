@@ -11,6 +11,7 @@ namespace WolfyBlog.API.Services
         void CreateTagAsync(Tag tag);
         void DeleteTagAsync(Tag tag);
         Task<bool> TagExistsAsync(int tagId);
+        Task<bool> TagExistsAsync(List<string> tagNames);
         Task<bool> SaveAsync();
     }
 }

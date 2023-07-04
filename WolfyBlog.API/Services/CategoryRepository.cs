@@ -23,6 +23,11 @@ namespace WolfyBlog.API.Services
             return await _context.Categories.AnyAsync(c => c.Id == categoryId);
         }
 
+        public async Task<bool> CategoryExistsAsync(string categoryTitle)
+        {
+            return await _context.Categories.AnyAsync(c => c.Title == categoryTitle);
+        }
+
         public void CreateCategory(Category category)
         {
             if (category == null) throw new ArgumentNullException(nameof(category));

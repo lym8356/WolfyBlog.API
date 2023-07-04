@@ -53,6 +53,13 @@ namespace WolfyBlog.API.Services
         {
             return await _context.Tags.AnyAsync(c => c.Id == tagId);
         }
+
+        // count how many of the tags in the tagNames list exist in the database
+        public async Task<bool> TagExistsAsync(List<string> tagNames)
+        {
+            int existingTagCount = await _context.Tags.CountAsync(t => tagNames.Contains(t.Title));
+            return existingTagCount == tagNames.Count;
+        }
     }
 }
 

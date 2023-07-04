@@ -15,13 +15,21 @@ namespace WolfyBlog.API.Controllers
     public class ArticleController : ControllerBase
     {
         private IArticleRepository _articleRepository;
+        private ICategoryRepository _categoryRepository;
+        private ITagRepository _tagRepository;
         private readonly IUrlHelper _urlHelper;
 
-        public ArticleController(IArticleRepository articleRepository,
+        public ArticleController(
+            IArticleRepository articleRepository,
             IUrlHelperFactory urlHelperFactory,
-            IActionContextAccessor actionContextAccessor)
+            IActionContextAccessor actionContextAccessor,
+            ICategoryRepository categoryRepository,
+            ITagRepository tagRepository
+            )
         {
             _articleRepository = articleRepository;
+            _categoryRepository = categoryRepository;
+            _tagRepository = tagRepository;
 
             if (actionContextAccessor?.ActionContext is null)
             {
@@ -40,34 +48,6 @@ namespace WolfyBlog.API.Controllers
             var queryParams = new ExpandoObject() as IDictionary<string, Object>;
             queryParams.Add("pageNumber", paginationParams.PageNumber);
             queryParams.Add("pageSize", paginationParams.PageSize);
-
-            //var url = type switch
-            //{
-            //    ResourceUriType.PreviousPage => _urlHelper.Link(routeName,
-            //        new
-            //        {
-            //            //keyword = searchParams.Keyword,
-            //            searchParams,
-            //            pageNumber = paginationParams.PageNumber - 1,
-            //            pageSize = paginationParams.PageSize
-            //        }),
-            //    ResourceUriType.NextPage => _urlHelper.Link(routeName,
-            //        new
-            //        {
-            //            //keyword = searchParams.Keyword,
-            //            searchParams,
-            //            pageNumber = paginationParams.PageNumber + 1,
-            //            pageSize = paginationParams.PageSize
-            //        }),
-            //    _ => _urlHelper.Link(routeName,
-            //        new
-            //        {
-            //            //keyword = searchParams.Keyword,
-            //            searchParams,
-            //            pageNumber = paginationParams.PageNumber,
-            //            pageSize = paginationParams.PageSize
-            //        })
-            //};
 
             switch (type)
             {
@@ -108,7 +88,8 @@ namespace WolfyBlog.API.Controllers
 
             if (articlesFromRepo == null || !articlesFromRepo.Any())
             {
-                return NotFound("No articles found.");
+                var articlesToReturn = articlesFromRepo.ToList();
+                return Ok(articlesToReturn);
             }
 
             var previousPageLink = articlesFromRepo.HasPrevious
@@ -136,8 +117,7 @@ namespace WolfyBlog.API.Controllers
             Response.Headers.Add("x-pagination",
                 Newtonsoft.Json.JsonConvert.SerializeObject(paginationMetadata));
 
-            return searchParams.Keyword == null || searchParams.Keyword == string.Empty ? Ok(articlesFromRepo)
-                : Ok(articlesFromRepo.ShapeData(searchParams.Fields));
+            return Ok(articlesFromRepo.ShapeData(searchParams.Fields));
         }
 
         [HttpGet("searchByCategory", Name = "GetArticlesByCategory")]
@@ -148,6 +128,12 @@ namespace WolfyBlog.API.Controllers
         {
             if (string.IsNullOrEmpty(searchParams.Category)) return BadRequest("Category cannot be null or empty");
 
+            if (!await _categoryRepository.CategoryExistsAsync(searchParams.Category))
+            {
+                return NotFound("Category does not exist.");
+            }
+
+
             var articlesFromRepo = await _articleRepository.GetArticlesByCategoryAsync(
                 searchParams.Category,
                 paginationParams.PageSize,
@@ -156,7 +142,8 @@ namespace WolfyBlog.API.Controllers
 
             if (articlesFromRepo == null || !articlesFromRepo.Any())
             {
-                return NotFound("No articles found.");
+                var articlesToReturn = articlesFromRepo.ToList();
+                return Ok(articlesToReturn);
             }
 
             var previousPageLink = articlesFromRepo.HasPrevious
@@ -195,7 +182,13 @@ namespace WolfyBlog.API.Controllers
         {
             if (string.IsNullOrEmpty(searchParams.Tags)) return BadRequest("Tags cannot be null or empty");
 
+            
             var tagNames = searchParams.Tags.Split(',').ToList();
+
+            if (!await _tagRepository.TagExistsAsync(tagNames))
+            {
+                return NotFound("One or more tags do not exist.");
+            }
 
             var articlesFromRepo = await _articleRepository.GetArticlesByTagsAsync(
                 tagNames,
@@ -203,9 +196,10 @@ namespace WolfyBlog.API.Controllers
                 paginationParams.PageNumber);
 
 
-            if (articlesFromRepo == null || !articlesFromRepo.Any())
+            if(articlesFromRepo == null || !articlesFromRepo.Any())
             {
-                return NotFound("No articles found.");
+                var articlesToReturn = articlesFromRepo.ToList();
+                return Ok(articlesToReturn);
             }
 
             var previousPageLink = articlesFromRepo.HasPrevious
@@ -233,7 +227,7 @@ namespace WolfyBlog.API.Controllers
             Response.Headers.Add("x-pagination",
                 Newtonsoft.Json.JsonConvert.SerializeObject(paginationMetadata));
 
-            return Ok(articlesFromRepo);
+            return Ok(articlesFromRepo.ShapeData(searchParams.Fields));
         }
 
         [HttpGet("{articleId}", Name = "GetArticle")]

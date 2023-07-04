@@ -10,6 +10,7 @@ namespace WolfyBlog.API.Services
         void CreateCategory(Category category);
         void DeleteCategory(Category category);
         Task<bool> CategoryExistsAsync(int categoryId);
+        Task<bool> CategoryExistsAsync(string categoryTitle);
         Task<bool> SaveAsync();
     }
 }
