@@ -230,6 +230,7 @@ namespace WolfyBlog.API.Controllers
             return Ok(articlesFromRepo.ShapeData(searchParams.Fields));
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("{articleId}", Name = "GetArticle")]
         public async Task<IActionResult> GetArticle(Guid articleId)
         {
@@ -239,6 +240,18 @@ namespace WolfyBlog.API.Controllers
             }
 
             var articleFromRepo = await _articleRepository.GetArticleAsync(articleId);
+            return Ok(articleFromRepo);
+        }
+
+        [HttpGet("slug/{articleSlug}", Name = "GetArticleBySlug")]
+        public async Task<IActionResult> GetArticle(string articleSlug)
+        {
+            if (!(await _articleRepository.ArticleExistsAsync(articleSlug)))
+            {
+                return NotFound("Article does not exist.");
+            }
+
+            var articleFromRepo = await _articleRepository.GetArticleAsync(articleSlug);
             return Ok(articleFromRepo);
         }
 

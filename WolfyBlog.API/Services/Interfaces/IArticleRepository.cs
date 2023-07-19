@@ -9,6 +9,7 @@ namespace WolfyBlog.API.Services
         Task<PaginationList<ArticleDTO>> GetArticlesAsync(
             string keyword, int? pageSize, int? pageNumber);
         Task<ArticleDTO> GetArticleAsync(Guid articleId);
+        Task<ArticleDTO> GetArticleAsync(string articleSlug);
         Task<Article> FindArticleByIdAsync(Guid articleId);
         Task<PaginationList<ArticleDTO>> GetArticlesByCategoryAsync(
             string categoryName,
@@ -20,6 +21,7 @@ namespace WolfyBlog.API.Services
         Task<ArticleDTO> EditArticleAsync(Article articleFromRepo, ArticleForUpdateDTO articleForUpdateDTO);
         void DeleteArticle(Article article);
         Task<bool> ArticleExistsAsync(Guid articleId);
+        Task<bool> ArticleExistsAsync(string articleSlug);
         Task<bool> SaveAsync();
     }
 }

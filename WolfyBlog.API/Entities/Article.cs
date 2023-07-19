@@ -11,6 +11,7 @@ namespace WolfyBlog.API.Entities
         [Required]
         [MaxLength(100)]
         public string Title { get; set; }
+        public string TitleSlug { get; set; }
         [MaxLength]
         public string? Content { get; set; }
         public Category? Category { get; set; }

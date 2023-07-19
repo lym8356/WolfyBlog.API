@@ -5,6 +5,7 @@ using AutoMapper.QueryableExtensions;
 using WolfyBlog.API.DTOs;
 using AutoMapper;
 using WolfyBlog.API.Helper;
+using Slugify;
 
 namespace WolfyBlog.API.Services
 {
@@ -21,6 +22,11 @@ namespace WolfyBlog.API.Services
         public async Task<bool> ArticleExistsAsync(Guid articleId)
         {
             return await _context.Articles.AnyAsync(a => a.Id == articleId);
+        }
+
+        public async Task<bool> ArticleExistsAsync(string articleSlug)
+        {
+            return await _context.Articles.AnyAsync(a => a.TitleSlug == articleSlug);
         }
 
         public async Task<ArticleDTO> CreateArticleAsync(ArticleForCreationDTO articleForCreationDTO)
@@ -41,6 +47,10 @@ namespace WolfyBlog.API.Services
                     articleToSave.ArticleTags.Add(new ArticleTag { Article = articleToSave, Tag = tag });
                 }
             }
+            // slugify title
+            var slugHelper = new SlugHelper();
+            var slug = slugHelper.GenerateSlug(articleToSave.Title);
+            articleToSave.TitleSlug = slug;
             _context.Articles.Add(articleToSave);
             // map to articleDTO to avoid object cycle
             var articleToReturn = _mapper.Map<ArticleDTO>(articleToSave);
@@ -78,6 +88,10 @@ namespace WolfyBlog.API.Services
                     articleFromRepo.ArticleTags.Add(new ArticleTag { Article = articleFromRepo, Tag = tag });
                 }
             }
+            // slugify title
+            var slugHelper = new SlugHelper();
+            var slug = slugHelper.GenerateSlug(articleFromRepo.Title);
+            articleFromRepo.TitleSlug = slug;
             _context.Update(articleFromRepo);
             var articleToReturn = _mapper.Map<ArticleDTO>(articleFromRepo);
             return articleToReturn;
@@ -88,6 +102,13 @@ namespace WolfyBlog.API.Services
             return await _context.Articles
                 .ProjectTo<ArticleDTO>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(a => a.Id == articleId);
+        }
+
+        public async Task<ArticleDTO> GetArticleAsync(string articleSlug)
+        {
+            return await _context.Articles
+                .ProjectTo<ArticleDTO>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync(a => a.TitleSlug == articleSlug);
         }
 
         public async Task<Article> FindArticleByIdAsync(Guid articleId)

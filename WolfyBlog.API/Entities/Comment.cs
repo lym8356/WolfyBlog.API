@@ -12,7 +12,7 @@ namespace WolfyBlog.API.Entities
         [Required]
         [MaxLength(2000)]
         public string Content { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
         [Required]
         [MaxLength(20)]
         public string CommenterUsername { get; set; }

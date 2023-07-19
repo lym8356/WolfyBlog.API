@@ -1,10 +1,9 @@
-﻿using System;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
+﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using WolfyBlog.API.Database;
 using WolfyBlog.API.DTOs;
 using WolfyBlog.API.Entities;
+using WolfyBlog.API.Helper;
 using WolfyBlog.API.Services.Interfaces;
 
 namespace WolfyBlog.API.Services
@@ -42,14 +41,51 @@ namespace WolfyBlog.API.Services
 
         public async Task<Comment> GetCommentAsync(Guid id)
         {
-            return await _context.Comments
-                .ProjectTo<Comment>(_mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync(c => c.Id == id);
+            //return await _context.Comments
+            //    .ProjectTo<Comment>(_mapper.ConfigurationProvider)
+            //    .FirstOrDefaultAsync(c => c.Id == id);
+            throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Comment>> GetCommentsAsync()
+        public async Task<PaginationList<Comment>> GetCommentsAsync(
+            int? pageSize,
+            int? pageNumber)
         {
-            return await _context.Comments.ToListAsync();
+            IQueryable<Comment> result = _context.Comments.OrderByDescending(c => c.CreatedAt);
+
+            if (pageSize.HasValue && pageNumber.HasValue)
+            {
+                return await PaginationList<Comment>.CreateAsync(pageNumber.Value, pageSize.Value, result);
+            }
+            else
+            {
+                var totalCount = await result.CountAsync();
+                var items = await result.ToListAsync();
+
+                return new PaginationList<Comment>(totalCount, 1, totalCount, items);
+            }
+        }
+
+        public async Task<PaginationList<Comment>> GetDiscussionCommentsAsync(
+            int? pageSize,
+            int? pageNumber)
+        {
+            IQueryable<Comment> result = _context.Comments
+                .Where(c => c.ReplyToArticleId == null && c.ParentCommentId == null)
+                .Include(c => c.Replies)
+                .OrderByDescending(c => c.CreatedAt);
+
+            if (pageSize.HasValue && pageNumber.HasValue)
+            {
+                return await PaginationList<Comment>.CreateAsync(pageNumber.Value, pageSize.Value, result);
+            }
+            else
+            {
+                var totalCount = await result.CountAsync();
+                var items = await result.ToListAsync();
+
+                return new PaginationList<Comment>(totalCount, 1, totalCount, items);
+            }
         }
 
         public async Task<IEnumerable<Comment>> GetCommentsByArticleId(Guid articleId)
