@@ -9,7 +9,8 @@ namespace WolfyBlog.API.Profiles
         public ArticleMappingProfile()
         {
             CreateMap<Article, Article>();
-            CreateMap<Article, ArticleDTO>();
+            CreateMap<Article, ArticleDTO>()
+                .ForMember(d => d.Comments, o => o.MapFrom(src => src.Comments.OrderByDescending(c => c.CreatedAt)));
             //CreateMap<ArticleTag, Tag>()
             //    .ForMember(d => d.Title, o => o.MapFrom(s => s.Tag.Title));
             CreateMap<ArticleForCreationDTO, Article>();
