@@ -153,12 +153,12 @@ namespace WolfyBlog.API.Services
             int? pageNumber)
         {
             var result = _context.Articles.AsQueryable().ProjectTo<ArticleDTO>(_mapper.ConfigurationProvider);
+            result = result.Where(a => a.IsDraft == false);
 
             if (!string.IsNullOrEmpty(categoryName))
             {
                 result = result.Where(a => a.Category.Title == categoryName);
             }
-
             if (pageSize.HasValue && pageNumber.HasValue)
             {
                 return await PaginationList<ArticleDTO>.CreateAsync(pageNumber.Value, pageSize.Value, result);
@@ -188,6 +188,8 @@ namespace WolfyBlog.API.Services
             }
 
             var result = articles.ProjectTo<ArticleDTO>(_mapper.ConfigurationProvider);
+
+            result = result.Where(a => a.IsDraft == false);
 
             if (pageSize.HasValue && pageNumber.HasValue)
             {
