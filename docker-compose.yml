@@ -1,0 +1,70 @@
+﻿version: "3.4"
+
+services:
+    db:
+        image: "mcr.microsoft.com/mssql/server:latest"
+        container_name: wolfyblog-db
+        ports:
+            - "1433:1433"
+        environment:
+            SA_PASSWORD: PaSSword12!
+            ACCEPT_EULA: "Y"
+
+    backend:
+        image: wolfyblog_backend
+        build:
+            context: ./WolfyBlog.API
+            dockerfile: Dockerfile
+        container_name: wolfyblog-backend
+        # ports:
+        #     - "8080:80"
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Production
+            # - ASPNETCORE_URLS=http://+:8080
+            - DATABASE_URL=wolfyblog-db
+            - DATABASE_USER=sa
+            - DATABASE_PASS=PaSSword12!
+            - JWTSettings__TokenKey=TXetmCXzJEDJUKJ3V9WB2JIE44ENKwVZ
+            - Cloudinary__ApiSecret=Naz1hGYNpBgv1QZF8tbIvdE11iM
+        depends_on:
+            - db
+
+    admin:
+        image: wolfyblog_admin
+        build:
+            context: ../wolfyblog-admin
+            dockerfile: Dockerfile.prod
+            args:
+                REACT_APP_API_URL: http://localhost/api
+        container_name: wolfyblog-admin
+        # ports:
+        #     - "3000:3000"
+        depends_on:
+            - backend
+
+    frontend:
+        image: wolfyblog
+        build: 
+            context: ../WolfyBlog
+            dockerfile: Dockerfile.prod
+        container_name: wolfyblog
+        # ports:
+        #     - "5173:80"
+        environment:
+            PORT: 5173
+            PUBLIC_API_URL: http://backend/api
+        depends_on:
+            - backend
+
+    nginx:
+        image: wolfyblog_nginx
+        build:
+            context:  ../wolfyblog-nginx
+            dockerfile: Dockerfile
+        container_name: wolfyblog-nginx
+        ports:
+            - "80:80"
+        depends_on:
+            - backend
+            - admin
+            - frontend            

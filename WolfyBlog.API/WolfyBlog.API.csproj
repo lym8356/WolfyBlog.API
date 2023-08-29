@@ -4,6 +4,8 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <DockerComposeProjectPath>../docker-compose.dcproj</DockerComposeProjectPath>
+    <UserSecretsId>428f1942-e15c-42de-81eb-6f36aa299d39</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -38,6 +40,7 @@
     <None Remove="Services\Article\" />
     <None Remove="ResourceParameters\" />
     <None Remove="Helper\" />
+    <None Remove="readme\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Entities\" />
@@ -48,5 +51,6 @@
     <Folder Include="Services\Interfaces\" />
     <Folder Include="ResourceParameters\" />
     <Folder Include="Helper\" />
+    <Folder Include="readme\" />
   </ItemGroup>
 </Project>

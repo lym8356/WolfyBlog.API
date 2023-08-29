@@ -1,8 +1,6 @@
-﻿using System;
-using CloudinaryDotNet;
+﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using WolfyBlog.API.Entities;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace WolfyBlog.API.Services
 {

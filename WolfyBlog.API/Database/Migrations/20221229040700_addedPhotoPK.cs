@@ -11,6 +11,12 @@ namespace WolfyBlog.API.Database.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            // Drop the primary key
+            // added on 09/08/2023
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_Photos",
+                table: "Photos");
+
             migrationBuilder.AlterColumn<Guid>(
                 name: "Id",
                 table: "Photos",
@@ -18,6 +24,13 @@ namespace WolfyBlog.API.Database.Migrations
                 nullable: false,
                 oldClrType: typeof(string),
                 oldType: "nvarchar(450)");
+
+            // Add the primary key back
+            // added on 09/08/2023
+            migrationBuilder.AddPrimaryKey(
+                name: "PK_Photos",
+                table: "Photos",
+                column: "Id");
 
             migrationBuilder.AddColumn<string>(
                 name: "publicId",

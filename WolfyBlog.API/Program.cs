@@ -13,6 +13,8 @@ using WolfyBlog.API.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
 // Add services to the container.
 
 builder.Services.AddControllers().AddJsonOptions(o =>
@@ -25,10 +27,26 @@ builder.Services.AddControllers().AddJsonOptions(o =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+// use remote db if in production
 builder.Services.AddDbContext<DataContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+
+    if (env == "Development")
+    {
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    }
+    else
+    {
+        // use connection details provided at runtime
+        var dbServerUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+        var dbUser = Environment.GetEnvironmentVariable("DATABASE_USER");
+        var dbPass = Environment.GetEnvironmentVariable("DATABASE_PASS");
+
+        var connStr = $"Server={dbServerUrl};Database=WolfyBlogDb;User Id={dbUser};Password={dbPass};TrustServerCertificate=true;";
+        options.UseSqlServer(connStr);
+    }
 });
+
 builder.Services.AddIdentityCore<AppUser>()
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<DataContext>()
@@ -96,7 +114,9 @@ app.UseIpRateLimiting();
 
 app.UseCors(opt =>
 {
-    opt.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000", "http://127.0.0.1:5173");
+    opt.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://wolfyblog-admin.com", "https://wolfyblog-admin.com",
+        "http://wolfyblog.com", "https://wolfyblog.com");
+    //opt.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
 });
 
 app.UseAuthentication();

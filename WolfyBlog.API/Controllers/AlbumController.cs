@@ -1,12 +1,8 @@
-﻿using System;
-using CloudinaryDotNet.Actions;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using WolfyBlog.API.DTOs;
 using WolfyBlog.API.Entities;
 using WolfyBlog.API.Services;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace WolfyBlog.API.Controllers
 {
