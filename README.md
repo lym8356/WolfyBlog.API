@@ -35,3 +35,10 @@ Here are the key folders and their purpose:
 
 # Postman Collection
 ![Postman Collection](./readme/postman_img.png)
+
+## Current Roadmap
+- Create endpoints for ADMIN site only
+- Add `category` property for Project entity
+- Article comment pagination
+- Add `Moment`
+- Switch from Cloudinary to S3 Bucket
