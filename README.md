@@ -37,6 +37,7 @@ Here are the key folders and their purpose:
 ![Postman Collection](./readme/postman_img.png)
 
 ## Current Roadmap
+- Fix an issue where, drafts are also treated as articles
 - Create endpoints for ADMIN site only
 - Add `category` property for Project entity
 - Article comment pagination
